@@ -1,163 +1,1484 @@
-V<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VOX | Moda que Habla por Ti</title>
+
+    <title>VOX | Sportswear</title>
+
+    <meta name="description" content="VOX Sportswear - Ropa deportiva diseñada para superar tus límites.">
+
+    <style>
+
+        /* =========================
+           CONFIGURACIÓN GENERAL
+        ========================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #ffffff;
+            color: #111111;
+        }
+
+        :root {
+            --negro: #050505;
+            --negro-suave: #111111;
+            --dorado: #d4af37;
+            --dorado-claro: #f0d875;
+            --blanco: #ffffff;
+            --gris: #f4f4f4;
+            --gris-texto: #777777;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            width: 100%;
+            display: block;
+        }
+
+        .contenedor {
+            width: 90%;
+            max-width: 1250px;
+            margin: auto;
+        }
+
+        .boton {
+            display: inline-block;
+            background: var(--dorado);
+            color: #000;
+            padding: 15px 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            border: 1px solid var(--dorado);
+        }
+
+        .boton:hover {
+            background: transparent;
+            color: var(--dorado);
+        }
+
+        .titulo-seccion {
+            text-align: center;
+            margin-bottom: 55px;
+        }
+
+        .titulo-seccion span {
+            color: var(--dorado);
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .titulo-seccion h2 {
+            font-size: 42px;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+
+        .titulo-seccion p {
+            max-width: 650px;
+            margin: 15px auto 0;
+            color: var(--gris-texto);
+            line-height: 1.7;
+        }
+
+
+        /* =========================
+           BARRA SUPERIOR
+        ========================== */
+
+        .barra-superior {
+            background: var(--dorado);
+            color: #000;
+            text-align: center;
+            padding: 9px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+
+        /* =========================
+           NAVBAR
+        ========================== */
+
+        header {
+            background: rgba(5, 5, 5, 0.98);
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #252525;
+        }
+
+        .navbar {
+            min-height: 82px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 34px;
+            font-weight: 900;
+            letter-spacing: 7px;
+            color: white;
+        }
+
+        .logo span {
+            color: var(--dorado);
+        }
+
+        .menu {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+        }
+
+        .menu a {
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .menu a:hover {
+            color: var(--dorado);
+        }
+
+        .iconos {
+            display: flex;
+            gap: 18px;
+            font-size: 20px;
+        }
+
+        .iconos a:hover {
+            color: var(--dorado);
+        }
+
+
+        /* =========================
+           HERO
+        ========================== */
+
+        .hero {
+            min-height: 680px;
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(0,0,0,0.92) 0%,
+                    rgba(0,0,0,0.65) 45%,
+                    rgba(0,0,0,0.25) 100%
+                ),
+                url("https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=2000&q=85");
+
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+
+        .hero-contenido {
+            max-width: 650px;
+        }
+
+        .hero-contenido small {
+            color: var(--dorado);
+            font-weight: bold;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: clamp(55px, 8vw, 100px);
+            line-height: 0.95;
+            margin: 20px 0;
+            text-transform: uppercase;
+            font-weight: 900;
+        }
+
+        .hero h1 span {
+            color: var(--dorado);
+        }
+
+        .hero p {
+            color: #ddd;
+            font-size: 18px;
+            line-height: 1.7;
+            max-width: 550px;
+            margin-bottom: 35px;
+        }
+
+        .hero-botones {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .boton-secundario {
+            display: inline-block;
+            padding: 15px 30px;
+            border: 1px solid white;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        .boton-secundario:hover {
+            background: white;
+            color: black;
+        }
+
+
+        /* =========================
+           CARACTERÍSTICAS
+        ========================== */
+
+        .caracteristicas {
+            background: var(--negro);
+            color: white;
+            padding: 25px 0;
+        }
+
+        .caracteristicas-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .caracteristica {
+            text-align: center;
+            padding: 15px;
+            border-right: 1px solid #333;
+        }
+
+        .caracteristica:last-child {
+            border: none;
+        }
+
+        .caracteristica .icono {
+            color: var(--dorado);
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .caracteristica h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .caracteristica p {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+
+        /* =========================
+           PRODUCTOS
+        ========================== */
+
+        .productos {
+            padding: 100px 0;
+        }
+
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .producto {
+            background: white;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .producto:hover {
+            transform: translateY(-8px);
+        }
+
+        .producto-imagen {
+            height: 390px;
+            overflow: hidden;
+            background: #eee;
+            position: relative;
+        }
+
+        .producto-imagen img {
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+        .producto:hover img {
+            transform: scale(1.05);
+        }
+
+        .etiqueta {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--dorado);
+            color: #000;
+            padding: 7px 12px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+
+        .producto-info {
+            padding: 20px 5px;
+        }
+
+        .producto-info small {
+            color: #999;
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+
+        .producto-info h3 {
+            margin: 8px 0;
+            font-size: 18px;
+        }
+
+        .precio {
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--dorado);
+        }
+
+
+        /* =========================
+           BANNER
+        ========================== */
+
+        .banner {
+            min-height: 500px;
+            background:
+                linear-gradient(
+                    rgba(0,0,0,0.65),
+                    rgba(0,0,0,0.65)
+                ),
+                url("https://images.unsplash.com/photo-1517838277536-f5f99be5010c?auto=format&fit=crop&w=1800&q=85");
+
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .banner-contenido {
+            width: 100%;
+        }
+
+        .banner h2 {
+            font-size: clamp(40px, 6vw, 75px);
+            text-transform: uppercase;
+            font-weight: 900;
+        }
+
+        .banner h2 span {
+            color: var(--dorado);
+        }
+
+        .banner p {
+            max-width: 650px;
+            margin: 20px auto 35px;
+            line-height: 1.7;
+            color: #ddd;
+        }
+
+
+        /* =========================
+           NOSOTROS
+        ========================== */
+
+        .nosotros {
+            padding: 100px 0;
+        }
+
+        .nosotros-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 70px;
+            align-items: center;
+        }
+
+        .nosotros-imagen {
+            position: relative;
+        }
+
+        .nosotros-imagen img {
+            height: 550px;
+            object-fit: cover;
+        }
+
+        .cuadro-dorado {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border: 4px solid var(--dorado);
+            bottom: -25px;
+            right: -25px;
+            z-index: -1;
+        }
+
+        .nosotros-texto span {
+            color: var(--dorado);
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        .nosotros-texto h2 {
+            font-size: 48px;
+            text-transform: uppercase;
+            margin: 15px 0 25px;
+        }
+
+        .nosotros-texto p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .estadisticas {
+            display: flex;
+            gap: 40px;
+            margin: 35px 0;
+        }
+
+        .estadistica strong {
+            display: block;
+            color: var(--dorado);
+            font-size: 35px;
+        }
+
+        .estadistica span {
+            color: #777;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+
+        /* =========================
+           COLECCIÓN
+        ========================== */
+
+        .coleccion {
+            background: var(--gris);
+            padding: 100px 0;
+        }
+
+        .coleccion-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .coleccion-item {
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coleccion-item.pequeno {
+            height: 500px;
+        }
+
+        .coleccion-item img {
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+        .coleccion-item:hover img {
+            transform: scale(1.07);
+        }
+
+        .coleccion-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                transparent 45%,
+                rgba(0,0,0,0.85)
+            );
+            display: flex;
+            align-items: flex-end;
+            padding: 30px;
+            color: white;
+        }
+
+        .coleccion-overlay h3 {
+            font-size: 28px;
+            text-transform: uppercase;
+        }
+
+        .coleccion-overlay a {
+            display: block;
+            margin-top: 8px;
+            color: var(--dorado);
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+
+        /* =========================
+           NEWSLETTER
+        ========================== */
+
+        .newsletter {
+            background: var(--negro);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .newsletter h2 {
+            font-size: 38px;
+            text-transform: uppercase;
+        }
+
+        .newsletter h2 span {
+            color: var(--dorado);
+        }
+
+        .newsletter p {
+            color: #999;
+            margin: 15px 0 30px;
+        }
+
+        .newsletter-form {
+            max-width: 600px;
+            margin: auto;
+            display: flex;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 17px;
+            border: none;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .newsletter-form button {
+            background: var(--dorado);
+            border: none;
+            padding: 0 30px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        footer {
+            background: #000;
+            color: white;
+            padding-top: 70px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 50px;
+            padding-bottom: 60px;
+        }
+
+        .footer-logo {
+            font-size: 38px;
+            font-weight: 900;
+            letter-spacing: 7px;
+        }
+
+        .footer-logo span {
+            color: var(--dorado);
+        }
+
+        .footer-col p {
+            color: #777;
+            line-height: 1.7;
+            margin-top: 20px;
+            max-width: 350px;
+        }
+
+        .footer-col h3 {
+            color: var(--dorado);
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 12px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .footer-col li a:hover {
+            color: var(--dorado);
+        }
+
+        .redes {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .redes a {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.3s;
+        }
+
+        .redes a:hover {
+            border-color: var(--dorado);
+            color: var(--dorado);
+        }
+
+        .copyright {
+            border-top: 1px solid #222;
+            padding: 25px 0;
+            text-align: center;
+            color: #555;
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 1000px) {
+
+            .productos-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .caracteristicas-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .caracteristica:nth-child(2) {
+                border-right: none;
+            }
+
+            .nosotros-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .coleccion-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .coleccion-item:first-child {
+                grid-column: span 2;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+
+        @media (max-width: 700px) {
+
+            .menu {
+                display: none;
+            }
+
+            .logo {
+                font-size: 28px;
+            }
+
+            .hero {
+                min-height: 600px;
+            }
+
+            .hero h1 {
+                font-size: 58px;
+            }
+
+            .productos-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .caracteristicas-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .caracteristica {
+                border-right: none;
+            }
+
+            .titulo-seccion h2 {
+                font-size: 32px;
+            }
+
+            .coleccion-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .coleccion-item:first-child {
+                grid-column: span 1;
+            }
+
+            .coleccion-item,
+            .coleccion-item.pequeno {
+                height: 420px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .newsletter-form button {
+                padding: 17px;
+            }
+        }
+
+    </style>
 </head>
 
-<body bgcolor="#f5f5f5">
 
-    <!-- Encabezado -->
-    <table width="100%" bgcolor="black" cellpadding="15">
-        <tr>
-            <td align="center">
-                <font color="white" size="7"><b>VOX</b></font><br>
-                <font color="gray" size="4">Moda que Habla por Ti</font>
-            </td>
-        </tr>
-    </table>
+<body>
 
-    <!-- Menú -->
-    <table width="100%" bgcolor="#333333" cellpadding="10">
-        <tr align="center">
-            <td><font color="white"><b>Inicio</b></font></td>
-            <td><font color="white"><b>Nosotros</b></font></td>
-            <td><font color="white"><b>Productos</b></font></td>
-            <td><font color="white"><b>Contacto</b></font></td>
-        </tr>
-    </table>
+    <!-- =========================
+         BARRA SUPERIOR
+    ========================== -->
 
-    <br>
+    <div class="barra-superior">
+        ENVÍOS A TODO ECUADOR · VOX SPORTSWEAR
+    </div>
 
-    <!-- Imagen Principal -->
-    <center>
-        <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=1000" width="700">
-    </center>
 
-    <hr>
+    <!-- =========================
+         MENÚ
+    ========================== -->
 
-    <!-- Nosotros -->
-    <center>
-        <h1>Bienvenidos a VOX</h1>
-    </center>
+    <header>
 
-    <p align="center">
-        VOX es una empresa dedicada al diseño y comercialización de ropa moderna,
-        ofreciendo prendas de alta calidad para hombres y mujeres que desean expresar
-        su personalidad a través de la moda.
-    </p>
+        <div class="contenedor navbar">
 
-    <hr>
+            <a href="#inicio" class="logo">
+                V<span>O</span>X
+            </a>
 
-    <!-- Misión -->
-    <h2 align="center">Nuestra Misión</h2>
+            <ul class="menu">
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#productos">Colección</a></li>
+                <li><a href="#nosotros">Nosotros</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
 
-    <p align="center">
-        Brindar ropa de excelente calidad, con diseños exclusivos,
-        precios accesibles y un estilo que inspire confianza y autenticidad.
-    </p>
+            <div class="iconos">
+                <a href="#">⌕</a>
+                <a href="#">♡</a>
+                <a href="#">🛒</a>
+            </div>
 
-    <hr>
+        </div>
 
-    <!-- Productos -->
-    <center>
-        <h2>Nuestros Productos</h2>
+    </header>
 
-        <table border="1" cellpadding="15">
 
-            <tr bgcolor="black">
-                <th><font color="white">Producto</font></th>
-                <th><font color="white">Descripción</font></th>
-                <th><font color="white">Precio</font></th>
-            </tr>
+    <!-- =========================
+         HERO
+    ========================== -->
 
-            <tr>
-                <td>Camisetas</td>
-                <td>Diseños modernos y cómodos.</td>
-                <td>$20</td>
-            </tr>
+    <section class="hero" id="inicio">
 
-            <tr>
-                <td>Hoodies</td>
-                <td>Perfectos para cualquier temporada.</td>
-                <td>$45</td>
-            </tr>
+        <div class="contenedor">
 
-            <tr>
-                <td>Jeans</td>
-                <td>Calidad premium y ajuste perfecto.</td>
-                <td>$40</td>
-            </tr>
+            <div class="hero-contenido">
 
-            <tr>
-                <td>Chaquetas</td>
-                <td>Elegancia y protección.</td>
-                <td>$60</td>
-            </tr>
+                <small>VOX SPORTSWEAR</small>
 
-        </table>
-    </center>
+                <h1>
+                    MOVE<br>
+                    <span>WITHOUT</span><br>
+                    LIMITS.
+                </h1>
 
-    <hr>
+                <p>
+                    Ropa deportiva diseñada para quienes no se detienen.
+                    Rendimiento, comodidad y estilo en cada movimiento.
+                </p>
 
-    <!-- Beneficios -->
-    <center>
-        <h2>¿Por qué elegir VOX?</h2>
-    </center>
+                <div class="hero-botones">
 
-    <ul>
-        <li>✔ Diseños exclusivos.</li>
-        <li>✔ Materiales de alta calidad.</li>
-        <li>✔ Envíos a todo el país.</li>
-        <li>✔ Atención personalizada.</li>
-        <li>✔ Excelente relación calidad-precio.</li>
-    </ul>
+                    <a href="#productos" class="boton">
+                        Comprar colección
+                    </a>
 
-    <hr>
+                    <a href="#nosotros" class="boton-secundario">
+                        Descubrir VOX
+                    </a>
 
-    <!-- Contacto -->
-    <center>
+                </div>
 
-        <h2>Contáctanos</h2>
+            </div>
 
-        <form>
+        </div>
 
-            Nombre:<br>
-            <input type="text" size="40"><br><br>
+    </section>
 
-            Correo:<br>
-            <input type="email" size="40"><br><br>
 
-            Mensaje:<br>
-            <textarea rows="5" cols="42"></textarea><br><br>
+    <!-- =========================
+         CARACTERÍSTICAS
+    ========================== -->
 
-            <input type="submit" value="Enviar">
+    <section class="caracteristicas">
 
-        </form>
+        <div class="contenedor caracteristicas-grid">
 
-    </center>
+            <div class="caracteristica">
 
-    <br><br>
+                <div class="icono">◈</div>
 
-    <!-- Pie de página -->
-    <table width="100%" bgcolor="black" cellpadding="15">
+                <h3>Alta calidad</h3>
 
-        <tr>
-            <td align="center">
+                <p>Materiales seleccionados</p>
 
-                <font color="white">
-                    © 2026 VOX - Todos los derechos reservados.
-                    <br>
-                    Instagram: @VOXFashion
-                    <br>
-                    Email: contacto@vox.com
-                </font>
+            </div>
 
-            </td>
-        </tr>
 
-    </table>
+            <div class="caracteristica">
+
+                <div class="icono">⚡</div>
+
+                <h3>Alto rendimiento</h3>
+
+                <p>Diseñada para entrenar</p>
+
+            </div>
+
+
+            <div class="caracteristica">
+
+                <div class="icono">◇</div>
+
+                <h3>Diseño premium</h3>
+
+                <p>Estilo VOX exclusivo</p>
+
+            </div>
+
+
+            <div class="caracteristica">
+
+                <div class="icono">✓</div>
+
+                <h3>Envíos nacionales</h3>
+
+                <p>Recibe tu pedido</p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         PRODUCTOS
+    ========================== -->
+
+    <section class="productos" id="productos">
+
+        <div class="contenedor">
+
+            <div class="titulo-seccion">
+
+                <span>VOX Collection</span>
+
+                <h2>Productos destacados</h2>
+
+                <p>
+                    Descubre nuestra selección de prendas deportivas
+                    creadas para acompañarte dentro y fuera del entrenamiento.
+                </p>
+
+            </div>
+
+
+            <div class="productos-grid">
+
+
+                <!-- PRODUCTO 1 -->
+
+                <div class="producto">
+
+                    <div class="producto-imagen">
+
+                        <span class="etiqueta">
+                            Nuevo
+                        </span>
+
+                        <img
+                            src="https://images.unsplash.com/photo-1581655353564-df123a1eb820?auto=format&fit=crop&w=900&q=85"
+                            alt="Camiseta deportiva VOX"
+                        >
+
+                    </div>
+
+                    <div class="producto-info">
+
+                        <small>VOX Performance</small>
+
+                        <h3>Camiseta Performance</h3>
+
+                        <span class="precio">
+                            $24.99
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PRODUCTO 2 -->
+
+                <div class="producto">
+
+                    <div class="producto-imagen">
+
+                        <span class="etiqueta">
+                            VOX
+                        </span>
+
+                        <img
+                            src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=85"
+                            alt="Short deportivo VOX"
+                        >
+
+                    </div>
+
+                    <div class="producto-info">
+
+                        <small>VOX Training</small>
+
+                        <h3>Short Training</h3>
+
+                        <span class="precio">
+                            $29.99
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PRODUCTO 3 -->
+
+                <div class="producto">
+
+                    <div class="producto-imagen">
+
+                        <span class="etiqueta">
+                            Premium
+                        </span>
+
+                        <img
+                            src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=900&q=85"
+                            alt="Conjunto deportivo VOX"
+                        >
+
+                    </div>
+
+                    <div class="producto-info">
+
+                        <small>VOX Elite</small>
+
+                        <h3>Conjunto Elite</h3>
+
+                        <span class="precio">
+                            $49.99
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PRODUCTO 4 -->
+
+                <div class="producto">
+
+                    <div class="producto-imagen">
+
+                        <span class="etiqueta">
+                            Nuevo
+                        </span>
+
+                        <img
+                            src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=85"
+                            alt="Hoodie deportivo VOX"
+                        >
+
+                    </div>
+
+                    <div class="producto-info">
+
+                        <small>VOX Urban</small>
+
+                        <h3>Hoodie Essential</h3>
+
+                        <span class="precio">
+                            $54.99
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         BANNER
+    ========================== -->
+
+    <section class="banner">
+
+        <div class="contenedor banner-contenido">
+
+            <h2>
+                TRAIN <span>HARD.</span><br>
+                LOOK <span>ICONIC.</span>
+            </h2>
+
+            <p>
+                Tu entrenamiento exige más.
+                Tu ropa también.
+                Descubre la nueva generación de VOX Sportswear.
+            </p>
+
+            <a href="#productos" class="boton">
+                Ver colección
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         NOSOTROS
+    ========================== -->
+
+    <section class="nosotros" id="nosotros">
+
+        <div class="contenedor nosotros-grid">
+
+            <div class="nosotros-imagen">
+
+                <img
+                    src="https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=1200&q=85"
+                    alt="Atleta usando ropa deportiva VOX"
+                >
+
+                <div class="cuadro-dorado"></div>
+
+            </div>
+
+
+            <div class="nosotros-texto">
+
+                <span>La filosofía VOX</span>
+
+                <h2>
+                    Hecho para<br>
+                    avanzar.
+                </h2>
+
+                <p>
+                    VOX nace con una visión clara: crear ropa deportiva
+                    que combine rendimiento, comodidad y una identidad
+                    fuerte.
+                </p>
+
+                <p>
+                    Cada prenda está pensada para acompañarte en tus
+                    entrenamientos, tus retos y cada objetivo que
+                    decidas conquistar.
+                </p>
+
+
+                <div class="estadisticas">
+
+                    <div class="estadistica">
+
+                        <strong>100%</strong>
+
+                        <span>
+                            Actitud
+                        </span>
+
+                    </div>
+
+
+                    <div class="estadistica">
+
+                        <strong>24/7</strong>
+
+                        <span>
+                            Movimiento
+                        </span>
+
+                    </div>
+
+
+                    <div class="estadistica">
+
+                        <strong>VOX</strong>
+
+                        <span>
+                            Identity
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <a href="#contacto" class="boton">
+                    Conoce más
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         COLECCIONES
+    ========================== -->
+
+    <section class="coleccion">
+
+        <div class="contenedor">
+
+            <div class="titulo-seccion">
+
+                <span>Explora VOX</span>
+
+                <h2>Encuentra tu estilo</h2>
+
+            </div>
+
+
+            <div class="coleccion-grid">
+
+
+                <div class="coleccion-item">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1517832207067-4db24a2ae47c?auto=format&fit=crop&w=1200&q=85"
+                        alt="VOX Training"
+                    >
+
+                    <div class="coleccion-overlay">
+
+                        <div>
+
+                            <h3>Training</h3>
+
+                            <a href="#productos">
+                                Explorar colección →
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="coleccion-item pequeno">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1517964603305-11c0f6f66012?auto=format&fit=crop&w=900&q=85"
+                        alt="VOX Performance"
+                    >
+
+                    <div class="coleccion-overlay">
+
+                        <div>
+
+                            <h3>Performance</h3>
+
+                            <a href="#productos">
+                                Ver productos →
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="coleccion-item pequeno">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=900&q=85"
+                        alt="VOX Lifestyle"
+                    >
+
+                    <div class="coleccion-overlay">
+
+                        <div>
+
+                            <h3>Lifestyle</h3>
+
+                            <a href="#productos">
+                                Ver productos →
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         NEWSLETTER
+    ========================== -->
+
+    <section class="newsletter">
+
+        <div class="contenedor">
+
+            <h2>
+                Únete al <span>movimiento VOX</span>
+            </h2>
+
+            <p>
+                Recibe novedades, lanzamientos y promociones exclusivas.
+            </p>
+
+            <form class="newsletter-form">
+
+                <input
+                    type="email"
+                    placeholder="Tu correo electrónico"
+                    required
+                >
+
+                <button type="submit">
+                    Suscribirme
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer id="contacto">
+
+        <div class="contenedor footer-grid">
+
+
+            <div class="footer-col">
+
+                <div class="footer-logo">
+                    V<span>O</span>X
+                </div>
+
+                <p>
+                    VOX Sportswear. Ropa deportiva para quienes
+                    convierten los límites en nuevos objetivos.
+                </p>
+
+                <div class="redes">
+
+                    <a href="#" aria-label="Instagram">
+                        IG
+                    </a>
+
+                    <a href="#" aria-label="Facebook">
+                        FB
+                    </a>
+
+                    <a href="#" aria-label="TikTok">
+                        TK
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="footer-col">
+
+                <h3>Comprar</h3>
+
+                <ul>
+
+                    <li>
+                        <a href="#productos">
+                            Camisetas
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#productos">
+                            Shorts
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#productos">
+                            Conjuntos
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#productos">
+                            Hoodies
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div class="footer-col">
+
+                <h3>Información</h3>
+
+                <ul>
+
+                    <li>
+                        <a href="#nosotros">
+                            Nosotros
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            Términos y condiciones
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            Política de privacidad
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#">
+                            Envíos
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div class="footer-col">
+
+                <h3>Contacto</h3>
+
+                <ul>
+
+                    <li>
+                        Loja, Ecuador
+                    </li>
+
+                    <li>
+                        contacto@vox.com
+                    </li>
+
+                    <li>
+                        +593 99 999 9999
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="copyright">
+
+            © 2026 VOX SPORTSWEAR · TODOS LOS DERECHOS RESERVADOS.
+
+        </div>
+
+    </footer>
+
 
 </body>
 </html>
