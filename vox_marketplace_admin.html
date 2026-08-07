@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="VOX Marketplace — catálogo y tienda online">
+  <title>VOX Marketplace</title>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#0b0d0f;
+      --panel:#111417;
+      --panel2:#171a1e;
+      --line:#292e34;
+      --text:#f4f6f8;
+      --muted:#9aa3ad;
+      --accent:#d9ff00;
+      --accent2:#b7d600;
+      --danger:#ff5c5c;
+      --success:#54d38a;
+      --shadow:0 18px 50px rgba(0,0,0,.28);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    a{color:inherit;text-decoration:none}
+
+    .topbar{
+      position:sticky;top:0;z-index:30;
+      height:72px;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0 5vw;
+      background:rgba(11,13,15,.9);
+      backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--line);
+    }
+    .brand{font-size:28px;font-weight:900;letter-spacing:.12em}
+    .brand span{color:var(--accent)}
+    .nav{display:flex;gap:8px;align-items:center}
+    .nav button,.ghost{
+      background:transparent;border:1px solid transparent;color:var(--muted);
+      padding:10px 14px;border-radius:10px
+    }
+    .nav button:hover,.ghost:hover{color:var(--text);border-color:var(--line);background:var(--panel)}
+    .primary{
+      background:var(--accent);color:#090b0c;border:0;
+      padding:11px 16px;border-radius:11px;font-weight:800
+    }
+    .primary:hover{background:#e7ff4d}
+    .danger{background:transparent;border:1px solid #633333;color:#ff8c8c;padding:9px 12px;border-radius:10px}
+
+    .hero{
+      min-height:58vh;
+      display:grid;place-items:center;text-align:center;
+      padding:80px 5vw;
+      border-bottom:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 30%,rgba(217,255,0,.09),transparent 35%),
+        linear-gradient(180deg,#0b0d0f 0%,#0e1114 100%);
+    }
+    .hero-inner{max-width:920px}
+    .eyebrow{color:var(--accent);font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:900}
+    .hero h1{font-size:clamp(52px,9vw,120px);line-height:.9;margin:18px 0;letter-spacing:-.07em}
+    .hero p{color:var(--muted);font-size:18px;max-width:680px;margin:0 auto 28px;line-height:1.7}
+    .empty-state{
+      max-width:700px;margin:0 auto;padding:28px;border:1px dashed #3a4047;
+      border-radius:18px;color:var(--muted);background:rgba(255,255,255,.015)
+    }
+
+    .section{padding:70px 5vw}
+    .section-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:26px}
+    .section h2{font-size:34px;margin:0}
+    .section-head p{color:var(--muted);margin:7px 0 0}
+    .products{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px
+    }
+    .product{
+      overflow:hidden;background:var(--panel);border:1px solid var(--line);
+      border-radius:var(--radius);transition:.2s;box-shadow:0 8px 30px rgba(0,0,0,.12)
+    }
+    .product:hover{transform:translateY(-3px);border-color:#3b424a}
+    .product-img{aspect-ratio:1/1;background:#0f1113;display:grid;place-items:center;overflow:hidden}
+    .product-img img{width:100%;height:100%;object-fit:cover}
+    .product-body{padding:18px}
+    .product-body h3{margin:0 0 8px;font-size:18px}
+    .product-body p{color:var(--muted);font-size:14px;line-height:1.5;min-height:42px}
+    .price{font-size:20px;font-weight:900;margin:14px 0}
+    .empty-products{grid-column:1/-1;padding:50px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:18px}
+
+    .footer{border-top:1px solid var(--line);padding:28px 5vw;color:var(--muted);display:flex;justify-content:space-between;gap:20px}
+
+    /* Modal / admin */
+    .overlay{
+      position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.72);
+      backdrop-filter:blur(8px);display:none;padding:20px;overflow:auto
+    }
+    .overlay.open{display:block}
+    .modal{
+      width:min(1180px,100%);margin:30px auto;background:#0f1215;
+      border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden
+    }
+    .modal-head{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--line)}
+    .modal-head h2{margin:0}
+    .close{background:transparent;border:0;color:var(--muted);font-size:28px}
+    .admin-layout{display:grid;grid-template-columns:230px 1fr;min-height:680px}
+    .sidebar{border-right:1px solid var(--line);padding:18px}
+    .side-btn{
+      display:block;width:100%;text-align:left;background:transparent;border:0;color:var(--muted);
+      padding:13px 14px;border-radius:11px;margin-bottom:6px
+    }
+    .side-btn.active,.side-btn:hover{background:var(--panel2);color:var(--text)}
+    .admin-main{padding:24px}
+    .hidden{display:none!important}
+
+    .login{width:min(440px,100%);margin:90px auto;padding:28px;background:var(--panel);border:1px solid var(--line);border-radius:20px}
+    .login h2{margin-top:0}
+    .field{margin:0 0 16px}
+    .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px}
+    .field input,.field textarea,.field select{
+      width:100%;padding:12px 13px;background:#0b0d0f;border:1px solid var(--line);
+      color:var(--text);border-radius:10px;outline:none
+    }
+    .field input:focus,.field textarea:focus,.field select:focus{border-color:#5e6873}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+
+    .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+    .kpi{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px}
+    .kpi .label{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+    .kpi .value{font-size:30px;font-weight:900;margin-top:8px}
+    .kpi .hint{font-size:12px;color:var(--muted);margin-top:4px}
+
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
+    .card h3{margin:0 0 15px}
+    .table-wrap{overflow:auto}
+    table{width:100%;border-collapse:collapse}
+    th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);font-size:13px;white-space:nowrap}
+    th{color:var(--muted);font-weight:700}
+    .tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#20252b;color:#bfc7cf;font-size:11px}
+    .tag.on{background:rgba(84,211,138,.12);color:var(--success)}
+    .tag.off{background:rgba(255,92,92,.1);color:#ff9999}
+    .notice{padding:12px 14px;border-radius:10px;background:#171c21;color:var(--muted);font-size:13px;line-height:1.5;margin-bottom:16px}
+    .notice strong{color:var(--text)}
+    .upload-zone{
+      border:1px dashed #4a525b;border-radius:14px;padding:25px;text-align:center;
+      color:var(--muted);background:#0b0d0f
+    }
+    .upload-zone input{margin-top:12px}
+    .preview-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px}
+    .preview-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+    .actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px}
+
+    .toast{
+      position:fixed;right:20px;bottom:20px;z-index:300;display:none;
+      padding:13px 16px;background:#171b1f;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)
+    }
+    .toast.show{display:block}
+
+    @media(max-width:900px){
+      .nav{display:none}.admin-layout{grid-template-columns:1fr}.sidebar{border-right:0;border-bottom:1px solid var(--line)}
+      .kpis{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}
+    }
+    @media(max-width:600px){
+      .topbar{padding:0 18px}.hero{padding:55px 18px}.section{padding:45px 18px}.kpis{grid-template-columns:1fr}
+      .footer{display:block}.footer div+div{margin-top:8px}.admin-main{padding:16px}
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" onclick="goHome()">V<span>O</span>X</a>
+    <nav class="nav">
+      <button onclick="scrollToId('catalogo')">Marketplace</button>
+      <button onclick="openLogin()">Admin</button>
+      <button class="primary" onclick="scrollToId('catalogo')">Ver catálogo</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="eyebrow">VOX Marketplace</div>
+        <h1>Tu catálogo.<br>Tu marca.</h1>
+        <p>Esta página no trae productos precargados. El contenido del marketplace se alimenta únicamente desde tu panel de administración.</p>
+        <div id="heroEmpty" class="empty-state">
+          <strong>Aún no hay productos publicados.</strong><br>
+          Ingresa al panel Admin, crea tus productos y carga tus propias imágenes.
+        </div>
+      </div>
+    </section>
+
+    <section id="catalogo" class="section">
+      <div class="section-head">
+        <div>
+          <h2>Marketplace</h2>
+          <p id="catalogSubtitle">Productos publicados por el administrador.</p>
+        </div>
+      </div>
+      <div id="products" class="products"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>© 2026 VOX Marketplace</div>
+    <div>Administración · Métricas · Catálogo</div>
+  </footer>
+
+  <!-- Login -->
+  <div id="loginOverlay" class="overlay">
+    <div class="login">
+      <div class="modal-head" style="padding:0 0 18px;border:0">
+        <h2>Acceso administrador</h2>
+        <button class="close" onclick="closeOverlay('loginOverlay')">×</button>
+      </div>
+      <div class="notice"><strong>Solo administración:</strong> usa el correo autorizado en tu proyecto Supabase.</div>
+      <form id="loginForm">
+        <div class="field">
+          <label>Correo</label>
+          <input id="loginEmail" type="email" required autocomplete="email">
+        </div>
+        <div class="field">
+          <label>Contraseña</label>
+          <input id="loginPassword" type="password" required autocomplete="current-password">
+        </div>
+        <button class="primary" style="width:100%">Entrar al panel</button>
+      </form>
+      <p id="loginError" style="color:#ff9999;font-size:13px"></p>
+    </div>
+  </div>
+
+  <!-- Admin -->
+  <div id="adminOverlay" class="overlay">
+    <div class="modal">
+      <div class="modal-head">
+        <h2>VOX · Centro de administración</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span id="adminEmail" class="tag"></span>
+          <button class="ghost" onclick="logout()">Cerrar sesión</button>
+          <button class="close" onclick="closeAdmin()">×</button>
+        </div>
+      </div>
+
+      <div class="admin-layout">
+        <aside class="sidebar">
+          <button class="side-btn active" data-tab="dashboard" onclick="showAdminTab('dashboard')">📊 Métricas</button>
+          <button class="side-btn" data-tab="products" onclick="showAdminTab('products')">🛍 Productos</button>
+          <button class="side-btn" data-tab="new-product" onclick="showAdminTab('new-product');resetProductForm()">＋ Nuevo producto</button>
+          <button class="side-btn" data-tab="settings" onclick="showAdminTab('settings')">⚙ Configuración</button>
+        </aside>
+
+        <section class="admin-main">
+          <!-- Dashboard -->
+          <div id="tab-dashboard">
+            <div class="notice">
+              <strong>Métricas del marketplace:</strong> aquí se registran visitas, visitantes, vistas de producto y acciones de carrito. Para ventas reales, conecta tu proceso de checkout al evento <code>purchase</code>.
+            </div>
+
+            <div class="kpis">
+              <div class="kpi"><div class="label">Visitas</div><div id="kpiViews" class="value">—</div><div class="hint">Page views</div></div>
+              <div class="kpi"><div class="label">Visitantes</div><div id="kpiVisitors" class="value">—</div><div class="hint">Visitantes únicos estimados</div></div>
+              <div class="kpi"><div class="label">Vistas de producto</div><div id="kpiProducts" class="value">—</div><div class="hint">Product views</div></div>
+              <div class="kpi"><div class="label">Conversión</div><div id="kpiConversion" class="value">—</div><div class="hint">Carrito / visitas</div></div>
+            </div>
+
+            <div class="grid2">
+              <div class="card">
+                <h3>Eventos</h3>
+                <div id="eventSummary"></div>
+              </div>
+              <div class="card">
+                <h3>Productos más vistos</h3>
+                <div id="topProducts"></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Últimos eventos</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Fecha</th><th>Evento</th><th>Producto</th><th>Página</th><th>Fuente</th></tr></thead>
+                  <tbody id="eventsTable"></tbody>
+                </table>
+              </div>
+            </div>
+            <button class="ghost" onclick="loadMetrics()">↻ Actualizar métricas</button>
+          </div>
+
+          <!-- Products -->
+          <div id="tab-products" class="hidden">
+            <div class="section-head">
+              <div><h2 style="font-size:26px">Productos</h2><p>Solo aparecen los productos que tú hayas creado.</p></div>
+              <button class="primary" onclick="showAdminTab('new-product');resetProductForm()">+ Crear producto</button>
+            </div>
+            <div class="card">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Producto</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Creado</th><th></th></tr></thead>
+                  <tbody id="adminProductsTable"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- New product -->
+          <div id="tab-new-product" class="hidden">
+            <div class="section-head">
+              <div><h2 style="font-size:26px" id="formTitle">Nuevo producto</h2><p>Carga la información y tus propias imágenes.</p></div>
+            </div>
+            <form id="productForm" class="card">
+              <input type="hidden" id="productId">
+              <div class="grid2">
+                <div class="field"><label>Nombre del producto *</label><input id="pName" required placeholder="Ej. Camiseta VOX Performance"></div>
+                <div class="field"><label>Precio (USD) *</label><input id="pPrice" type="number" min="0" step="0.01" required placeholder="0.00"></div>
+              </div>
+              <div class="grid2">
+                <div class="field"><label>Stock</label><input id="pStock" type="number" min="0" value="0"></div>
+                <div class="field"><label>Categoría</label><input id="pCategory" placeholder="Camisetas, shorts, accesorios..."></div>
+              </div>
+              <div class="field"><label>Descripción</label><textarea id="pDescription" rows="4" placeholder="Describe el producto, material, características, etc."></textarea></div>
+              <div class="grid2">
+                <div class="field"><label>Tallas (separadas por coma)</label><input id="pSizes" placeholder="S, M, L, XL"></div>
+                <div class="field"><label>Colores (separados por coma)</label><input id="pColors" placeholder="Negro, Blanco"></div>
+              </div>
+              <div class="field">
+                <label>Imágenes del producto *</label>
+                <div class="upload-zone">
+                  <div>Arrastra tus imágenes aquí o selecciónalas.</div>
+                  <input id="pImages" type="file" accept="image/*" multiple>
+                  <div id="imagePreview" class="preview-grid"></div>
+                </div>
+              </div>
+              <div class="grid2">
+                <div class="field"><label>Producto publicado</label>
+                  <select id="pActive"><option value="true">Sí, publicar</option><option value="false">No, guardar como borrador</option></select>
+                </div>
+                <div class="field"><label>Imagen principal</label><select id="pCover"><option value="0">Primera imagen</option></select></div>
+              </div>
+              <div class="actions">
+                <button type="button" class="ghost" onclick="showAdminTab('products')">Cancelar</button>
+                <button class="primary">Guardar producto</button>
+              </div>
+              <p id="productMessage" class="notice hidden"></p>
+            </form>
+          </div>
+
+          <!-- Settings -->
+          <div id="tab-settings" class="hidden">
+            <div class="card">
+              <h3>Configuración de conexión</h3>
+              <p style="color:var(--muted);line-height:1.6">
+                Edita las variables <code>SUPABASE_URL</code> y <code>SUPABASE_ANON_KEY</code> al inicio del archivo.
+                No coloques aquí la <strong>service_role key</strong>. Esa clave nunca debe publicarse en HTML.
+              </p>
+            </div>
+            <div class="card">
+              <h3>Qué puedes medir</h3>
+              <div class="grid3">
+                <div><strong>Tráfico</strong><p style="color:var(--muted)">Visitas, visitantes, páginas vistas y fuentes.</p></div>
+                <div><strong>Interés</strong><p style="color:var(--muted)">Vistas de producto, carritos y productos populares.</p></div>
+                <div><strong>Conversión</strong><p style="color:var(--muted)">Eventos de checkout y compra cuando conectes el pago.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+<script>
+/* =========================================================
+   1) CONFIGURACIÓN SUPABASE
+   Reemplaza estos dos valores con los de tu proyecto.
+   Usa SOLO la anon/public key. Nunca uses service_role aquí.
+   ========================================================= */
+const SUPABASE_URL = "TU_SUPABASE_URL";
+const SUPABASE_ANON_KEY = "TU_SUPABASE_ANON_KEY";
+
+let sb = null;
+let currentUser = null;
+let selectedFiles = [];
+let editingProduct = null;
+
+if (!SUPABASE_URL.startsWith("TU_") && !SUPABASE_ANON_KEY.startsWith("TU_")) {
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+/* ---------- Utilidades ---------- */
+function showToast(message){
+  const el=document.getElementById("toast");
+  el.textContent=message;el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"),3000);
+}
+function scrollToId(id){document.getElementById(id)?.scrollIntoView({behavior:"smooth"})}
+function goHome(){window.scrollTo({top:0,behavior:"smooth"})}
+function closeOverlay(id){document.getElementById(id).classList.remove("open")}
+function openLogin(){
+  if(!sb){alert("Primero configura SUPABASE_URL y SUPABASE_ANON_KEY en el código.");return}
+  document.getElementById("loginOverlay").classList.add("open");
+}
+function closeAdmin(){document.getElementById("adminOverlay").classList.remove("open")}
+function fmtMoney(v){return new Intl.NumberFormat("es-EC",{style:"currency",currency:"USD"}).format(Number(v||0))}
+function fmtDate(v){return new Date(v).toLocaleString("es-EC",{dateStyle:"short",timeStyle:"short"})}
+function safe(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+
+/* ---------- Analítica ---------- */
+function visitorId(){
+  let id=localStorage.getItem("vox_visitor_id");
+  if(!id){id=crypto.randomUUID();localStorage.setItem("vox_visitor_id",id)}
+  return id;
+}
+function source(){
+  const p=new URLSearchParams(location.search);
+  return p.get("utm_source") || document.referrer || "direct";
+}
+async function track(eventName, productId=null, meta={}){
+  if(!sb)return;
+  try{
+    await sb.from("analytics_events").insert({
+      event_name:eventName,
+      product_id:productId,
+      visitor_id:visitorId(),
+      page_path:location.pathname,
+      referrer:document.referrer||null,
+      source:source(),
+      metadata:meta
+    });
+  }catch(e){console.warn("Analytics:",e.message)}
+}
+
+/* ---------- Marketplace público ---------- */
+async function loadProducts(){
+  if(!sb){
+    renderProducts([]);
+    return;
+  }
+  const {data,error}=await sb.from("products")
+    .select("*")
+    .eq("active",true)
+    .order("created_at",{ascending:false});
+  if(error){console.error(error);renderProducts([]);return}
+  renderProducts(data||[]);
+}
+function renderProducts(items){
+  const box=document.getElementById("products");
+  document.getElementById("heroEmpty").style.display=items.length?"none":"block";
+  if(!items.length){
+    box.innerHTML=`<div class="empty-products"><strong>El marketplace está esperando contenido.</strong><br>El administrador todavía no ha publicado productos.</div>`;
+    return;
+  }
+  box.innerHTML=items.map(p=>{
+    const img=(p.image_urls||[])[p.cover_index||0];
+    return `<article class="product">
+      <div class="product-img">${img?`<img src="${safe(img)}" alt="${safe(p.name)}" loading="lazy">`:`<span style="color:#59616a">Sin imagen</span>`}</div>
+      <div class="product-body">
+        <div class="tag">${safe(p.category||"VOX")}</div>
+        <h3>${safe(p.name)}</h3>
+        <p>${safe(p.description||"")}</p>
+        <div class="price">${fmtMoney(p.price)}</div>
+        <button class="primary" style="width:100%" onclick="track('add_to_cart','${p.id}');showToast('Producto añadido al carrito')">Añadir al carrito</button>
+      </div>
+    </article>`;
+  }).join("");
+  items.forEach(p=>track("product_list_view",p.id));
+}
+
+/* ---------- Auth ---------- */
+async function checkSession(){
+  if(!sb)return;
+  const {data}=await sb.auth.getSession();
+  currentUser=data.session?.user||null;
+}
+async function isAdmin(){
+  if(!currentUser)return false;
+  const {data,error}=await sb.from("admin_users").select("user_id").eq("user_id",currentUser.id).maybeSingle();
+  return !error && !!data;
+}
+async function openAdminAfterLogin(){
+  const ok=await isAdmin();
+  if(!ok){
+    await sb.auth.signOut();
+    document.getElementById("loginError").textContent="Este usuario no tiene permisos de administrador.";
+    return;
+  }
+  document.getElementById("adminEmail").textContent=currentUser.email;
+  closeOverlay("loginOverlay");
+  document.getElementById("adminOverlay").classList.add("open");
+  showAdminTab("dashboard");
+  await loadMetrics();
+}
+async function logout(){
+  if(sb)await sb.auth.signOut();
+  currentUser=null;
+  closeAdmin();
+  showToast("Sesión cerrada");
+}
+document.getElementById("loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  if(!sb)return;
+  document.getElementById("loginError").textContent="";
+  const email=document.getElementById("loginEmail").value.trim();
+  const password=document.getElementById("loginPassword").value;
+  const {data,error}=await sb.auth.signInWithPassword({email,password});
+  if(error){document.getElementById("loginError").textContent=error.message;return}
+  currentUser=data.user;
+  await openAdminAfterLogin();
+});
+
+/* ---------- Admin tabs ---------- */
+function showAdminTab(tab){
+  ["dashboard","products","new-product","settings"].forEach(t=>document.getElementById("tab-"+t).classList.toggle("hidden",t!==tab));
+  document.querySelectorAll(".side-btn").forEach(b=>b.classList.toggle("active",b.dataset.tab===tab));
+  if(tab==="products")loadAdminProducts();
+  if(tab==="dashboard")loadMetrics();
+}
+
+/* ---------- Productos admin ---------- */
+async function loadAdminProducts(){
+  const {data,error}=await sb.from("products").select("*").order("created_at",{ascending:false});
+  if(error){showToast(error.message);return}
+  document.getElementById("adminProductsTable").innerHTML=(data||[]).map(p=>`
+    <tr>
+      <td><strong>${safe(p.name)}</strong></td>
+      <td>${fmtMoney(p.price)}</td>
+      <td>${Number(p.stock||0)}</td>
+      <td><span class="tag ${p.active?"on":"off"}">${p.active?"Publicado":"Borrador"}</span></td>
+      <td>${fmtDate(p.created_at)}</td>
+      <td>
+        <button class="ghost" onclick='editProduct(${JSON.stringify(p).replace(/'/g,"&#39;")})'>Editar</button>
+        <button class="danger" onclick="deleteProduct('${p.id}')">Eliminar</button>
+      </td>
+    </tr>`).join("") || `<tr><td colspan="6" style="color:var(--muted)">No hay productos.</td></tr>`;
+}
+function resetProductForm(){
+  editingProduct=null;
+  document.getElementById("productId").value="";
+  document.getElementById("formTitle").textContent="Nuevo producto";
+  document.getElementById("productForm").reset();
+  selectedFiles=[];
+  document.getElementById("imagePreview").innerHTML="";
+  document.getElementById("pCover").innerHTML='<option value="0">Primera imagen</option>';
+}
+function editProduct(p){
+  editingProduct=p;
+  document.getElementById("productId").value=p.id;
+  document.getElementById("formTitle").textContent="Editar producto";
+  document.getElementById("pName").value=p.name||"";
+  document.getElementById("pPrice").value=p.price||"";
+  document.getElementById("pStock").value=p.stock||0;
+  document.getElementById("pCategory").value=p.category||"";
+  document.getElementById("pDescription").value=p.description||"";
+  document.getElementById("pSizes").value=(p.sizes||[]).join(", ");
+  document.getElementById("pColors").value=(p.colors||[]).join(", ");
+  document.getElementById("pActive").value=String(!!p.active);
+  selectedFiles=[];
+  document.getElementById("imagePreview").innerHTML=(p.image_urls||[]).map(u=>`<img src="${safe(u)}" alt="">`).join("");
+  document.getElementById("pCover").innerHTML=(p.image_urls||[]).map((_,i)=>`<option value="${i}" ${i===(p.cover_index||0)?"selected":""}>Imagen ${i+1}</option>`).join("");
+  showAdminTab("new-product");
+}
+document.getElementById("pImages").addEventListener("change",e=>{
+  selectedFiles=[...e.target.files];
+  const preview=document.getElementById("imagePreview");
+  preview.innerHTML="";
+  selectedFiles.forEach(f=>{
+    const img=document.createElement("img");
+    img.src=URL.createObjectURL(f);
+    preview.appendChild(img);
+  });
+  document.getElementById("pCover").innerHTML=selectedFiles.map((_,i)=>`<option value="${i}">Imagen ${i+1}</option>`).join("") || '<option value="0">Primera imagen</option>';
+});
+
+async function uploadImages(files, productId){
+  const urls=[];
+  for(const file of files){
+    const ext=(file.name.split(".").pop()||"jpg").toLowerCase();
+    const name=`${productId}/${crypto.randomUUID()}.${ext}`;
+    const {error}=await sb.storage.from("products").upload(name,file,{upsert:false,contentType:file.type});
+    if(error)throw error;
+    const {data}=sb.storage.from("products").getPublicUrl(name);
+    urls.push(data.publicUrl);
+  }
+  return urls;
+}
+document.getElementById("productForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  if(!sb)return;
+  const msg=document.getElementById("productMessage");
+  msg.classList.remove("hidden");msg.textContent="Guardando...";
+  try{
+    let id=document.getElementById("productId").value;
+    if(!id)id=crypto.randomUUID();
+
+    const oldUrls=editingProduct?.image_urls||[];
+    let imageUrls=[...oldUrls];
+    if(selectedFiles.length) imageUrls=[...imageUrls,...await uploadImages(selectedFiles,id)];
+    if(!imageUrls.length)throw new Error("Debes cargar al menos una imagen.");
+
+    const payload={
+      id,
+      name:document.getElementById("pName").value.trim(),
+      price:Number(document.getElementById("pPrice").value),
+      stock:Number(document.getElementById("pStock").value||0),
+      category:document.getElementById("pCategory").value.trim()||null,
+      description:document.getElementById("pDescription").value.trim()||null,
+      sizes:document.getElementById("pSizes").value.split(",").map(x=>x.trim()).filter(Boolean),
+      colors:document.getElementById("pColors").value.split(",").map(x=>x.trim()).filter(Boolean),
+      image_urls:imageUrls,
+      cover_index:Number(document.getElementById("pCover").value||0),
+      active:document.getElementById("pActive").value==="true",
+      updated_at:new Date().toISOString()
+    };
+    const {error}=await sb.from("products").upsert(payload);
+    if(error)throw error;
+    msg.textContent="Producto guardado correctamente.";
+    showToast("Producto guardado");
+    resetProductForm();
+    showAdminTab("products");
+    await loadProducts();
+  }catch(err){
+    msg.textContent=err.message;
+  }
+});
+async function deleteProduct(id){
+  if(!confirm("¿Eliminar este producto? Esta acción no se puede deshacer."))return;
+  const {error}=await sb.from("products").delete().eq("id",id);
+  if(error){showToast(error.message);return}
+  showToast("Producto eliminado");
+  await loadAdminProducts();await loadProducts();
+}
+
+/* ---------- Métricas ---------- */
+async function loadMetrics(){
+  if(!sb)return;
+  const {data,error}=await sb.from("analytics_events")
+    .select("event_name,visitor_id,product_id,page_path,source,created_at,metadata,products(name)")
+    .order("created_at",{ascending:false}).limit(1000);
+  if(error){console.error(error);showToast("No se pudieron cargar las métricas: "+error.message);return}
+  const events=data||[];
+  const views=events.filter(e=>e.event_name==="page_view").length;
+  const visitors=new Set(events.map(e=>e.visitor_id).filter(Boolean)).size;
+  const pviews=events.filter(e=>["product_view","product_list_view"].includes(e.event_name)).length;
+  const carts=events.filter(e=>e.event_name==="add_to_cart").length;
+  document.getElementById("kpiViews").textContent=views.toLocaleString("es-EC");
+  document.getElementById("kpiVisitors").textContent=visitors.toLocaleString("es-EC");
+  document.getElementById("kpiProducts").textContent=pviews.toLocaleString("es-EC");
+  document.getElementById("kpiConversion").textContent=views?((carts/views)*100).toFixed(2)+"%":"0%";
+
+  const counts={};
+  events.forEach(e=>counts[e.event_name]=(counts[e.event_name]||0)+1);
+  document.getElementById("eventSummary").innerHTML=Object.entries(counts)
+    .sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)"><span>${safe(k)}</span><strong>${v}</strong></div>`).join("")||"Sin eventos";
+
+  const top={};
+  events.filter(e=>e.product_id).forEach(e=>{
+    const name=e.products?.name||e.product_id;
+    top[name]=(top[name]||0)+1;
+  });
+  document.getElementById("topProducts").innerHTML=Object.entries(top).sort((a,b)=>b[1]-a[1]).slice(0,8)
+    .map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--line)"><span>${safe(k)}</span><strong>${v}</strong></div>`).join("")||"Sin vistas de productos";
+
+  document.getElementById("eventsTable").innerHTML=events.slice(0,30).map(e=>`
+    <tr><td>${fmtDate(e.created_at)}</td><td>${safe(e.event_name)}</td><td>${safe(e.products?.name||"—")}</td><td>${safe(e.page_path)}</td><td>${safe(e.source||"direct")}</td></tr>
+  `).join("")||`<tr><td colspan="5">No hay eventos.</td></tr>`;
+}
+
+/* ---------- Inicio ---------- */
+(async function init(){
+  if(sb){
+    await checkSession();
+    await track("page_view");
+    await loadProducts();
+    sb.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null});
+  }else{
+    renderProducts([]);
+  }
+})();
+</script>
+</body>
+</html>
