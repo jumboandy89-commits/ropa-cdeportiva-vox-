@@ -36,6 +36,38 @@
           width: 80%;
           margin: 0 auto;
       }
+      .hero {
+          text-align: center;
+          margin: 40px 0;
+          padding: 20px;
+          border: 2px solid #ffcc00;
+          background-color: #1a1a1a;
+          border-radius: 5px;
+      }
+      .hero h1 {
+          font-size: 48px;
+          margin: 0;
+      }
+      .hero p {
+          font-size: 24px;
+          margin: 10px 0 0;
+      }
+      .reference-section {
+          text-align: center;
+          margin: 40px 0;
+          padding: 20px;
+          background-color: #1a1a1a;
+          border-radius: 5px;
+      }
+      .reference-section h2 {
+          color: #ffcc00;
+      }
+      .reference-section input {
+          width: 80%;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+      }
       section {
           margin: 40px 0;
           display: none; /* Ocultar secciones por defecto */
@@ -59,12 +91,27 @@
       .product:hover {
           transform: scale(1.02); /* Efecto de zoom al pasar el ratón */
       }
-      .cart-section {
-          background: #1a1a1a;
-          color: #ffcc00;
-          padding: 20px;
-          border-radius: 5px;
-          margin: 40px 0;
+      .color-size {
+          margin: 10px 0;
+      }
+      .color-options, .size-options {
+          display: flex;
+          justify-content: center;
+          margin: 10px 0;
+      }
+      .color-options div, .size-options div {
+          margin: 0 10px;
+          cursor: pointer;
+          border: 2px solid transparent;
+          border-radius: 50%;
+          width: 30px;
+          height: 30px;
+      }
+      .color-options div:hover, .size-options div:hover {
+          border-color: #ffcc00; /* Resaltar al pasar el ratón */
+      }
+      .selected {
+          border-color: #ffcc00; /* Color de borde para selección */
       }
       footer {
           text-align: center;
@@ -101,14 +148,6 @@
       .button:hover {
           background: #e6b800; /* Color más oscuro al pasar el ratón */
       }
-      .product-details {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-      }
-      .color-size {
-          margin: 10px 0;
-      }
   </style>
   <script>
       function showSection(sectionId) {
@@ -118,11 +157,23 @@
           });
           document.getElementById(sectionId).style.display = 'block'; // Mostrar la sección seleccionada
       }
+
+      function selectColor(element) {
+          const colors = document.querySelectorAll('.color-options div');
+          colors.forEach(color => color.classList.remove('selected'));
+          element.classList.add('selected');
+      }
+
+      function selectSize(element) {
+          const sizes = document.querySelectorAll('.size-options div');
+          sizes.forEach(size => size.classList.remove('selected'));
+          element.classList.add('selected');
+      }
   </script>
 </head>
 <body>
   <header>
-      <h1>Vox</h1>
+      <h1>VOX</h1>
       <nav>
           <a href="#" onclick="showSection('quienes-somos')">Quiénes Somos</a>
           <a href="#" onclick="showSection('vision-mision')">Visión y Misión</a>
@@ -133,6 +184,17 @@
   </header>
 
   <div class="container">
+      <div class="hero">
+          <h1>VOX</h1>
+          <p>SALUD + COMODIDAD = VIDA</p>
+      </div>
+
+      <div class="reference-section">
+          <h2>Referencias para Nuevos Clientes</h2>
+          <p>Tu voz es importante y escuchada porque eres parte de la familia VOX.</p>
+          <input type="text" placeholder="Escribe tu referencia aquí...">
+      </div>
+
       <section id="quienes-somos">
           <h2>Quiénes Somos</h2>
           <p>Vox es una marca dedicada a ofrecer ropa deportiva de alta calidad, diseñada para aquellos que buscan comodidad y estilo en su día a día. Nuestra pasión por el deporte nos impulsa a crear productos que inspiren a las personas a mantenerse activas y saludables.</p>
@@ -154,61 +216,55 @@
 
           <div class="product">
               <h3>Bermuda de Entrenamiento</h3>
-              <div class="product-details">
-                  <div class="color-size">
-                      <p><strong>Colores:</strong> Negro, Blanco, Gris</p>
-                      <p><strong>Tallas:</strong> S, M, L, XL</p>
-                  </div>
-                  <p>Precio: $15.00</p>
+              <div class="color-options">
+                  <div style="background-color: black;" onclick="selectColor(this)"></div>
+                  <div style="background-color: white;" onclick="selectColor(this)"></div>
+                  <div style="background-color: gray;" onclick="selectColor(this)"></div>
               </div>
+              <div class="size-options">
+                  <div onclick="selectSize(this)">S</div>
+                  <div onclick="selectSize(this)">M</div>
+                  <div onclick="selectSize(this)">L</div>
+                  <div onclick="selectSize(this)">XL</div>
+              </div>
+              <p>Precio: $15.00</p>
               <p>Comodidad y estilo en cada movimiento.</p>
               <button class="button">Añadir al Carrito</button>
           </div>
 
           <div class="product">
               <h3>Camiseta de Rendimiento</h3>
-              <div class="product-details">
-                  <div class="color-size">
-                      <p><strong>Colores:</strong> Negro, Blanco, Gris</p>
-                      <p><strong>Tallas:</strong> S, M, L, XL</p>
-                  </div>
-                  <p>Precio: $15.00</p>
+              <div class="color-options">
+                  <div style="background-color: black;" onclick="selectColor(this)"></div>
+                  <div style="background-color: white;" onclick="selectColor(this)"></div>
+                  <div style="background-color: gray;" onclick="selectColor(this)"></div>
               </div>
+              <div class="size-options">
+                  <div onclick="selectSize(this)">S</div>
+                  <div onclick="selectSize(this)">M</div>
+                  <div onclick="selectSize(this)">L</div>
+                  <div onclick="selectSize(this)">XL</div>
+              </div>
+              <p>Precio: $15.00</p>
               <p>Ligera y transpirable para tus entrenamientos.</p>
               <button class="button">Añadir al Carrito</button>
           </div>
 
           <div class="product">
               <h3>Medias Antideslizantes</h3>
-              <div class="product-details">
-                  <div class="color-size">
-                      <p><strong>Colores:</strong> Negro, Blanco, Gris</p>
-                      <p><strong>Tallas:</strong> Única</p>
-                  </div>
-                  <p>Precio: $5.00</p>
+              <div class="color-options">
+                  <div style="background-color: black;" onclick="selectColor(this)"></div>
+                  <div style="background-color: white;" onclick="selectColor(this)"></div>
+                  <div style="background-color: gray;" onclick="selectColor(this)"></div>
               </div>
+              <div class="size-options">
+                  <div onclick="selectSize(this)">Única</div>
+              </div>
+              <p>Precio: $5.00</p>
               <p>Máxima adherencia y comodidad.</p>
               <button class="button">Añadir al Carrito</button>
           </div>
       </section>
-
-      <div class="cart-section" id="carrito">
-          <h2>Carrito de Compras</h2>
-          <p>Aquí puedes añadir los productos seleccionados.</p>
-          <div class="form-group">
-              <label for="nombre">Nombre del Comprador:</label>
-              <input type="text" id="nombre" placeholder="Ingresa tu nombre">
-          </div>
-          <div class="form-group">
-              <label for="email">Correo Electrónico:</label>
-              <input type="email" id="email" placeholder="Ingresa tu correo">
-          </div>
-          <div class="form-group">
-              <label for="mensaje">Mensaje de Referencia:</label>
-              <input type="text" id="mensaje" placeholder="Escribe un mensaje opcional">
-          </div>
-          <button class="button">Finalizar Compra</button>
-      </div>
   </div>
 
   <footer>
